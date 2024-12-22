@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/select';
 import Link from 'next/link';
 import { Mic, Flame, Zap } from 'lucide-react';
+const notUsed = "not_used"
 
 export default function SearchPage() {
   return (
