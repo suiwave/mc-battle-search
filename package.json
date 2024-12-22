@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "pnpx @biomejs/biome lint src",
+    "format": "pnpx @biomejs/biome format ./ --write"
   },
   "dependencies": {
     "@radix-ui/react-select": "^2.1.4",
@@ -21,6 +22,7 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.9.4",
     "@eslint/eslintrc": "^3",
     "@types/node": "^20",
     "@types/react": "^19",

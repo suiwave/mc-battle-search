@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
- 
+
 @layer base {
   :root {
     --background: 240 30% 3%;
@@ -36,7 +36,7 @@
     --radius: 0.5rem;
   }
 }
- 
+
 @layer base {
   * {
     @apply border-border;
@@ -48,7 +48,8 @@
 }
 
 .neon-text {
-  text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 20px #ff00de, 0 0 35px #ff00de, 0 0 40px #ff00de, 0 0 50px #ff00de, 0 0 75px #ff00de;
+  text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 20px #ff00de, 0 0
+    35px #ff00de, 0 0 40px #ff00de, 0 0 50px #ff00de, 0 0 75px #ff00de;
 }
 
 .gradient-bg {
@@ -86,4 +87,3 @@
   transform: translateY(-2px);
   box-shadow: 0 5px 10px rgba(255, 0, 221, 0.3), 0 3px 3px rgba(255, 0, 0, 0.2);
 }
-
