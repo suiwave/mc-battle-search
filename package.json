@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "pnpx @biomejs/biome lint src",
+    "lint": "pnpx @biomejs/biome lint ./",
     "format": "pnpx @biomejs/biome format ./ --write",
     "prepare": "husky"
   },

@@ -18,8 +18,18 @@
   },
   "linter": {
     "enabled": true,
+    "ignore": [".next", "node_modules"],
     "rules": {
-      "recommended": true
+      "recommended": true,
+      "correctness": {
+        "noUnusedVariables": "error",
+        "useHookAtTopLevel": "error",
+        "noUnusedImports": "warn"
+      },
+      "style": {
+        "noNegationElse": "error",
+        "useBlockStatements": "error"
+      }
     }
   },
   "javascript": {
