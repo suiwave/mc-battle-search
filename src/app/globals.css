@@ -1,21 +1,89 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
+ 
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: 240 30% 3%;
+    --foreground: 0 0% 98%;
+
+    --muted: 240 30% 10%;
+    --muted-foreground: 240 5% 64%;
+
+    --accent: 330 100% 50%;
+    --accent-foreground: 0 0% 98%;
+
+    --popover: 240 30% 3%;
+    --popover-foreground: 0 0% 98%;
+
+    --border: 240 30% 10%;
+    --input: 240 30% 10%;
+
+    --card: 240 30% 3%;
+    --card-foreground: 0 0% 98%;
+
+    --primary: 270 100% 60%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 240 30% 10%;
+    --secondary-foreground: 0 0% 98%;
+
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 0 0% 98%;
+
+    --ring: 240 30% 10%;
+
+    --radius: 0.5rem;
+  }
+}
+ 
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+.neon-text {
+  text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 20px #ff00de, 0 0 35px #ff00de, 0 0 40px #ff00de, 0 0 50px #ff00de, 0 0 75px #ff00de;
 }
+
+.gradient-bg {
+  background: linear-gradient(135deg, #0f0014 0%, #1a0022 100%);
+}
+
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(255, 0, 221, 0.2), 0 6px 6px rgba(255, 0, 0, 0.1);
+}
+
+.mature-input {
+  background-color: rgba(30, 30, 40, 0.8);
+  border: 1px solid rgba(255, 0, 221, 0.3);
+  color: #fff;
+}
+
+.mature-input:focus {
+  border-color: rgba(255, 0, 221, 0.8);
+  box-shadow: 0 0 0 2px rgba(255, 0, 221, 0.2);
+}
+
+.mature-button {
+  background: linear-gradient(45deg, #ff00de, #ff0000);
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.mature-button:hover {
+  background: linear-gradient(45deg, #ff0000, #ff00de);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 10px rgba(255, 0, 221, 0.3), 0 3px 3px rgba(255, 0, 0, 0.2);
+}
+
