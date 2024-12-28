@@ -10,7 +10,7 @@
     --muted: hsl(240 30% 10%);
     --muted-foreground: hsl(240 5% 64%);
 
-    --accent: hsl(330 100% 50%);
+    --accent: hsl(108, 61%, 38%);
     --accent-foreground: hsl(0 0% 98%);
 
     --popover: hsl(240 30% 3%);
@@ -48,8 +48,8 @@
 }
 
 .neon-text {
-  text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 20px #ff00de, 0 0
-    35px #ff00de, 0 0 40px #ff00de, 0 0 50px #ff00de, 0 0 75px #ff00de;
+  text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 20px #8a2be2, 0 0
+    35px #8a2be2, 0 0 40px #8a2be2, 0 0 50px #8a2be2, 0 0 75px #8a2be2;
 }
 
 .gradient-bg {

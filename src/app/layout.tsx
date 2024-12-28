@@ -1,7 +1,7 @@
 import './globals.css';
-import { Inter } from 'next/font/google';
+import { Noto_Sans_JP } from 'next/font/google';
 
-const inter = Inter({ subsets: ['latin'] });
+const notoJp = Noto_Sans_JP({ subsets: ['latin'] });
 
 export const metadata = {
   title: 'MC Battle Search',
@@ -14,8 +14,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
-      <body className={`${inter.className} bg-black text-white min-h-screen`}>
+    <html lang="ja" className="dark">
+      <body className={`${notoJp.className} bg-black text-white min-h-screen`}>
         {children}
       </body>
     </html>
