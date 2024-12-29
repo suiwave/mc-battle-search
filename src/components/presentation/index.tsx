@@ -10,12 +10,13 @@ import {
 import { Flame, Zap, Mic } from 'lucide-react';
 import type { Battle } from '@/types/tables';
 
-import { useState, type JSX } from 'react';
-import { BattleCard } from '../elements/BattleCard';
-import SelectBox from '../elements/SelectBox';
+import type { JSX } from 'react';
+import { BattleCard } from '@/components/elements/BattleCard';
+import SelectBox from '@/components/elements/SelectBox';
+import useBattleData from '@/hooks/useBattleData';
 
 interface IndexPageProps {
-  battles: Battle[];
+  baseData: Battle[];
 }
 
 /**
@@ -23,29 +24,9 @@ interface IndexPageProps {
  * @param {IndexPageProps} props - Battleの配列を含むprops
  * @returns {JSX.Element} JSX要素
  */
-export default function Index({ battles }: IndexPageProps): JSX.Element {
+export default function Index({ baseData }: IndexPageProps): JSX.Element {
   // フィルタリングされたバトルの状態を管理
-  const [filteredBattles, setFilteredBattles] = useState(battles);
-
-  // 大会名の配列を作成
-  const tournamentValues = [{ name: 'All Tournaments', value: 'all' }];
-  const battlesFilterdByTournamentName = Array.from(
-    new Set(battles.map((battle) => battle.tournament_name)),
-  );
-  for (const battle of battlesFilterdByTournamentName) {
-    tournamentValues.push({ name: battle, value: battle });
-  }
-
-  // 大会名でバトルをフィルタリング
-  const handleTournamentChange = (tournamentName: string) => {
-    if (tournamentName === 'all') {
-      setFilteredBattles(battles);
-    } else {
-      setFilteredBattles(
-        battles.filter((battle) => battle.tournament_name === tournamentName),
-      );
-    }
-  };
+  const { battles, allTournamentValues, handleTournamentChange } = useBattleData(baseData);
 
   return (
     <div className="container mx-auto px-4 py-16 gradient-bg min-h-screen">
@@ -56,7 +37,7 @@ export default function Index({ battles }: IndexPageProps): JSX.Element {
         <SelectBox
           onValueChange={handleTournamentChange}
           placeholder={'Tournament'}
-          selectValues={tournamentValues}
+          selectValues={allTournamentValues}
           testIdPrefix={'Tournament'}
         />
         <Select>
@@ -76,7 +57,7 @@ export default function Index({ battles }: IndexPageProps): JSX.Element {
         </Select>
       </div>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {filteredBattles.map((battle) => (
+        {battles.map((battle) => (
           <BattleCard key={battle.id} battle={battle} />
         ))}
       </div>

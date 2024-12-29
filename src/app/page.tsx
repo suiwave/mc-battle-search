@@ -9,5 +9,5 @@ export default async function Page() {
   const response = await client.api.battles.$get();
   const battles = await response.json();
 
-  return <IndexPage battles={battles} />;
+  return <IndexPage baseData={battles} />;
 }
