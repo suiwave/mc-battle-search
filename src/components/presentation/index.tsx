@@ -8,27 +8,14 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import {
-  Calendar,
-  Trophy,
-  User,
   Flame,
   Zap,
   Mic,
-  LinkIcon,
 } from 'lucide-react';
 import type { Battle } from '@/types/tables';
 
-const getMCs = (battle: Battle): string[] => {
-  return [
-    battle.mc1,
-    battle.mc2,
-    battle.mc3,
-    battle.mc4,
-    battle.mc5,
-    battle.mc6,
-  ].filter((mc): mc is string => mc !== null);
-};
 import type { JSX } from 'react';
+import { BattleCard } from '../elements/BattleCard';
 
 interface IndexPageProps {
   battles: Battle[];
@@ -75,40 +62,7 @@ export default function Index({ battles }: IndexPageProps): JSX.Element {
       </div>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {battles.map((battle) => (
-          <div
-            key={battle.id}
-            className="bg-black bg-opacity-70 p-6 rounded-lg shadow-lg card-hover border border-primary/20"
-          >
-            <h2 className="text-2xl font-semibold mb-4 text-accent">
-              {battle.title}
-            </h2>
-            <div className="space-y-2 text-gray-300">
-              <p className="flex items-center">
-                <Trophy className="mr-2 h-4 w-4 text-primary" />{' '}
-                {battle.tournament_name}
-              </p>
-              <p className="flex items-center">
-                <User className="mr-2 h-4 w-4 text-primary" />{' '}
-                {getMCs(battle).join(' vs ')}
-              </p>
-              <p className="flex items-center">
-                <Calendar className="mr-2 h-4 w-4 text-primary" />{' '}
-                {Math.floor(battle.length / 60)}:
-                {(battle.length % 60).toString().padStart(2, '0')}
-              </p>
-              <p className="flex items-center">
-                <LinkIcon className="mr-2 h-4 w-4 text-primary" />
-                <a
-                  href={battle.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-accent hover:underline"
-                >
-                  Watch Battle
-                </a>
-              </p>
-            </div>
-          </div>
+          <BattleCard key={battle.id} battle={battle} />
         ))}
       </div>
       <div className="mt-8 flex justify-center space-x-4">

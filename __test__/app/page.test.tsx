@@ -6,7 +6,7 @@ import '@testing-library/jest-dom/vitest';
 import type { JSX } from 'react';
 
 import IndexPage from '@/app/page';
-import * as battleService from '@/services/battle';
+import { convertFriendlyMatchLabel, convertFriendlyTime } from '@/util/String';
 
 import { dummyBattles } from '../TestData/TestData';
 
@@ -75,16 +75,27 @@ describe('IndexPage', () => {
     describe('バトル結果表示', () => {
       it('バトル結果が全量表示されていること', async () => {
         // 準備
-        // getAllBattlesをspyしてモックデータを返却する
-        const spy = vi.spyOn(battleService, 'getAllBattles');
-        spy.mockResolvedValue(dummyBattles);
+        // honoのclientをspyしてモックデータを返却する
+        // リクエストは3000のlocalhostサーバーが処理するので、フロントエンドの部分でmockする必要がある
+        const spy = vi.spyOn(global, "fetch");
+        const mockResponse: Partial<Response> = {
+          json: () => Promise.resolve(dummyBattles), // データを JSON として返す
+          status: 200, // HTTPステータスコード
+          ok: true, // ステータスが成功かどうか
+        };
+        spy.mockResolvedValue(mockResponse as Response);
 
         // 実行
         await renderServerComponent(IndexPage);
 
         // 検証
-        const battleResults = screen.getAllByRole('heading', { level: 2 });
-        expect(battleResults.length).toBe(dummyBattles.length);
+        // バトル情報が全て表示されていること
+        for (const battle of dummyBattles) {
+          expect(screen.getByText(battle.title)).toBeInTheDocument();
+          expect(screen.getByText(battle.tournament_name)).toBeInTheDocument();
+          expect(screen.getByText(convertFriendlyTime(battle.length))).toBeInTheDocument();
+          expect(screen.getByText(convertFriendlyMatchLabel(battle))).toBeInTheDocument();
+        }
       });
     });
   });
