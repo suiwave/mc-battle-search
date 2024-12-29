@@ -6,15 +6,13 @@ import type { Battle } from '@/types/tables';
  * @returns {Promise<Battle[]>} バトルのリストを返すPromise
  */
 export async function getAllBattles(): Promise<Battle[]> {
-    // Supabaseからバトルデータを取得するクエリ
-    const { data, error } = await supabase
-        .from('battles')
-        .select('*');
+  // Supabaseからバトルデータを取得するクエリ
+  const { data, error } = await supabase.from('battles').select('*');
 
-    if (error) {
-        console.error('Error fetching battles:', error);
-        return [];
-    }
+  if (error) {
+    console.error('Error fetching battles:', error);
+    return [];
+  }
 
-    return data || [];
+  return data || [];
 }

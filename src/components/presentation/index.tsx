@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import {
   Select,
@@ -7,13 +7,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Calendar, Trophy, User, Flame, Zap, Mic, LinkIcon } from 'lucide-react';
+import {
+  Calendar,
+  Trophy,
+  User,
+  Flame,
+  Zap,
+  Mic,
+  LinkIcon,
+} from 'lucide-react';
 import type { Battle } from '@/types/tables';
 
-
-
 const getMCs = (battle: Battle): string[] => {
-  return [battle.mc1, battle.mc2, battle.mc3, battle.mc4, battle.mc5, battle.mc6].filter((mc): mc is string => mc !== null);
+  return [
+    battle.mc1,
+    battle.mc2,
+    battle.mc3,
+    battle.mc4,
+    battle.mc5,
+    battle.mc6,
+  ].filter((mc): mc is string => mc !== null);
 };
 import type { JSX } from 'react';
 
@@ -71,17 +84,26 @@ export default function Index({ battles }: IndexPageProps): JSX.Element {
             </h2>
             <div className="space-y-2 text-gray-300">
               <p className="flex items-center">
-                <Trophy className="mr-2 h-4 w-4 text-primary" /> {battle.tournament_name}
+                <Trophy className="mr-2 h-4 w-4 text-primary" />{' '}
+                {battle.tournament_name}
               </p>
               <p className="flex items-center">
-                <User className="mr-2 h-4 w-4 text-primary" /> {getMCs(battle).join(' vs ')}
+                <User className="mr-2 h-4 w-4 text-primary" />{' '}
+                {getMCs(battle).join(' vs ')}
               </p>
               <p className="flex items-center">
-                <Calendar className="mr-2 h-4 w-4 text-primary" /> {Math.floor(battle.length / 60)}:{(battle.length % 60).toString().padStart(2, '0')}
+                <Calendar className="mr-2 h-4 w-4 text-primary" />{' '}
+                {Math.floor(battle.length / 60)}:
+                {(battle.length % 60).toString().padStart(2, '0')}
               </p>
               <p className="flex items-center">
                 <LinkIcon className="mr-2 h-4 w-4 text-primary" />
-                <a href={battle.url} target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">
+                <a
+                  href={battle.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-accent hover:underline"
+                >
                   Watch Battle
                 </a>
               </p>
