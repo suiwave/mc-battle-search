@@ -3,7 +3,7 @@ import type { Battle } from '@/types/tables';
 
 /**
  * 全てのバトルを取得するメソッド
- * @returns {Promise<any[]>} バトルのリストを返すPromise
+ * @returns {Promise<Battle[]>} バトルのリストを返すPromise
  */
 export async function getAllBattles(): Promise<Battle[]> {
     // Supabaseからバトルデータを取得するクエリ

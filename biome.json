@@ -24,7 +24,7 @@
       "correctness": {
         "noUnusedVariables": "error",
         "useHookAtTopLevel": "error",
-        "noUnusedImports": "warn"
+        "noUnusedImports": "error"
       },
       "style": {
         "noNegationElse": "error",
