@@ -3,6 +3,7 @@ import { getAllBattles } from '@/services/battle';
 const app = new Hono()
   .basePath('/api') // /api 以下のリクエストを処理するため、basePath を設定
   .get('/battles', async (c) => {
+    console.log('GET /battles');
     return c.json(await getAllBattles());
   });
 

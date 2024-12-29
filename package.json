@@ -8,7 +8,7 @@
     "test": "vitest",
     "build": "next build",
     "start": "next start",
-    "shadcn":"pnpm dlx shadcn@latest add",
+    "shadcn": "pnpm dlx shadcn@latest add",
     "lint": "pnpx @biomejs/biome lint ./",
     "format": "pnpx @biomejs/biome format ./ --write",
     "prepare": "husky"

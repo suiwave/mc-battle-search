@@ -7,15 +7,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  Flame,
-  Zap,
-  Mic,
-} from 'lucide-react';
+import { Flame, Zap, Mic } from 'lucide-react';
 import type { Battle } from '@/types/tables';
 
-import type { JSX } from 'react';
+import { useState, type JSX } from 'react';
 import { BattleCard } from '../elements/BattleCard';
+import SelectBox from '../elements/SelectBox';
 
 interface IndexPageProps {
   battles: Battle[];
@@ -27,23 +24,41 @@ interface IndexPageProps {
  * @returns {JSX.Element} JSX要素
  */
 export default function Index({ battles }: IndexPageProps): JSX.Element {
+  // フィルタリングされたバトルの状態を管理
+  const [filteredBattles, setFilteredBattles] = useState(battles);
+
+  // 大会名の配列を作成
+  const tournamentValues = [{ name: 'All Tournaments', value: 'all' }];
+  const battlesFilterdByTournamentName = Array.from(
+    new Set(battles.map((battle) => battle.tournament_name)),
+  );
+  for (const battle of battlesFilterdByTournamentName) {
+    tournamentValues.push({ name: battle, value: battle });
+  }
+
+  // 大会名でバトルをフィルタリング
+  const handleTournamentChange = (tournamentName: string) => {
+    if (tournamentName === 'all') {
+      setFilteredBattles(battles);
+    } else {
+      setFilteredBattles(
+        battles.filter((battle) => battle.tournament_name === tournamentName),
+      );
+    }
+  };
+
   return (
     <div className="container mx-auto px-4 py-16 gradient-bg min-h-screen">
       <h1 className="text-5xl font-bold mb-8 text-center neon-text">
         Lyrical Showdowns
       </h1>
       <div className="mb-8 grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Select>
-          <SelectTrigger className="mature-input">
-            <SelectValue placeholder="Tournament" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Tournaments</SelectItem>
-            <SelectItem value="Midnight Cipher">Midnight Cipher</SelectItem>
-            <SelectItem value="Verbal Vendetta">Verbal Vendetta</SelectItem>
-            <SelectItem value="Lyrical Labyrinth">Lyrical Labyrinth</SelectItem>
-          </SelectContent>
-        </Select>
+        <SelectBox
+          onValueChange={handleTournamentChange}
+          placeholder={'Tournament'}
+          selectValues={tournamentValues}
+          testIdPrefix={'Tournament'}
+        />
         <Select>
           <SelectTrigger className="mature-input">
             <SelectValue placeholder="MC" />
@@ -61,7 +76,7 @@ export default function Index({ battles }: IndexPageProps): JSX.Element {
         </Select>
       </div>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {battles.map((battle) => (
+        {filteredBattles.map((battle) => (
           <BattleCard key={battle.id} battle={battle} />
         ))}
       </div>
