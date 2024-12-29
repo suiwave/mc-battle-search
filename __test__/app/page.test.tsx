@@ -66,7 +66,7 @@ describe('IndexPage', () => {
       expect(heading).toBeInTheDocument();
     });
 
-    it('トーナメントフィルターが表示されていること', async () => {
+    it('大会フィルターが表示されていること', async () => {
       // 準備
       // 実行
       await renderServerComponent(IndexPage);
@@ -108,38 +108,92 @@ describe('IndexPage', () => {
     });
   });
   describe('バトルフィルター機能', () => {
-    it('トーナメントでフィルターできること', async () => {
-      // 準備
-      // 実行
-      await renderServerComponent(IndexPage);
+    describe('大会によるフィルター機能', () => {
+      it('大会でフィルターできること', async () => {
+        // 準備
+        // 実行
+        await renderServerComponent(IndexPage);
 
-      // フィルターを選択
-      // トーナメントフィルターをクリック
-      const tournamentFilter = getComboboxByText('Tournament');
-      await user.click(tournamentFilter);
+        // フィルターを選択
+        // 大会フィルターをクリック
+        const tournamentFilter = getComboboxByText('Tournament');
+        await user.click(tournamentFilter);
 
-      // 指定したトーナメント名を選択
-      const tournamentOption = screen.getByTestId(
-        `Tournament-select-option-${dummyBattles[0].tournament_name}`,
-      );
-      await user.click(tournamentOption);
+        // 指定した大会名を選択
+        const tournamentOption = screen.getByTestId(
+          `Tournament-select-option-${dummyBattles[0].tournament_name}`,
+        );
+        await user.click(tournamentOption);
 
-      // 検証
-      const filteredBattles = dummyBattles.filter(
-        (battle) => battle.tournament_name === dummyBattles[0].tournament_name,
-      );
+        // 検証
+        const filteredBattles = dummyBattles.filter(
+          (battle) => battle.tournament_name === dummyBattles[0].tournament_name,
+        );
 
-      // フィルタリングされたバトルが表示されていること
-      for (const battle of filteredBattles) {
-        expect(screen.getByText(battle.title)).toBeInTheDocument();
-      }
+        // フィルタリングされたバトルが表示されていること
+        for (const battle of filteredBattles) {
+          expect(screen.getByText(battle.title)).toBeInTheDocument();
+        }
 
-      // フィルタリングされたバトル以外が表示されていないこと
-      expect(screen.getAllByText('Watch Battle').length).toBe(
-        filteredBattles.length,
-      );
+        // フィルタリングされたバトル以外が表示されていないこと
+        expect(screen.getAllByText('Watch Battle').length).toBe(
+          filteredBattles.length,
+        );
+      });
+      it('大会で全てを選択した場合、大会によるフィルターは解除されること', async () => {
+        // 準備
+        // 実行
+        await renderServerComponent(IndexPage);
+
+        // フィルターを選択
+        // 大会フィルターをクリック
+        const tournamentFilter = getComboboxByText('Tournament');
+        await user.click(tournamentFilter);
+
+        // 指定した大会名を選択
+        const tournamentOption = screen.getByTestId(
+          `Tournament-select-option-${dummyBattles[0].tournament_name}`,
+        );
+        await user.click(tournamentOption);
+
+        // 検証
+        const filteredBattles = dummyBattles.filter(
+          (battle) => battle.tournament_name === dummyBattles[0].tournament_name,
+        );
+
+        // フィルタリングされたバトル以外が表示されていないこと
+        expect(screen.getAllByText('Watch Battle').length).toBe(
+          filteredBattles.length,
+        );
+
+        // ここからALLを選択するパート
+        // フィルターを選択
+        await user.click(tournamentFilter);
+
+        // "All" オプションを選択
+        const allOption = screen.getByTestId('Tournament-select-option-all');
+        await user.click(allOption);
+
+        // 検証
+        // 全てのバトル情報が表示されていること
+        expect(screen.getAllByText('Watch Battle').length).toBe(
+          dummyBattles.length,
+        );
+      });
     });
 
-    it.todo('MCフィルターが機能していること', async () => {});
+    describe('MCによるフィルター機能', () => {
+      it.todo('MCフィルター1が指定、2が全てで機能していること', async () => { });
+      it.todo('MCフィルター1が全て、2が指定で機能していること', async () => { });
+      it.todo('MCフィルター1が指定、2が指定で機能していること', async () => { });
+    });
+
+    describe('大会とMCによる同時フィルター機能', () => {
+      describe('大会フィルターを指定した状態で動作すること', () => {
+        it.todo('MCフィルター1が指定、2が全てで機能していること', async () => { });
+        it.todo('MCフィルター1が全て、2が指定で機能していること', async () => { });
+        it.todo('MCフィルター1が指定、2が指定で機能していること', async () => { });
+      });
+    });
   });
 });
