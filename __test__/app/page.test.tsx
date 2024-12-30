@@ -1,4 +1,10 @@
-import { cleanup, getByText, render, screen } from '@testing-library/react';
+import {
+  cleanup,
+  getByRole,
+  getByText,
+  render,
+  screen,
+} from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom/vitest';
@@ -10,6 +16,8 @@ import { convertFriendlyMatchLabel, convertFriendlyTime } from '@/util/String';
 
 import { dummyBattles } from '../TestData/TestData';
 import {
+  cardDataTestIdPrefix,
+  RegexCardDataTestIdPrefix,
   type SelectCategory,
   selectDataTestIdPrefix,
 } from '@/constants/constants';
@@ -142,14 +150,31 @@ describe('IndexPage', () => {
         // 検証
         // バトル情報が全て表示されていること
         for (const battle of dummyBattles) {
-          const battleCard = screen.getByTestId(battle.title);
+          const battleCard = screen.getByTestId(
+            `${cardDataTestIdPrefix}${battle.title}`,
+          );
+
+          // カードがリンクになっていること
+          expect(battleCard).toHaveAttribute('role', 'link');
+          expect(battleCard.getAttribute('href')).toBe(battle.url);
+
+          // タイトルが表示されていること
           expect(getByText(battleCard, battle.title)).toBeInTheDocument();
+
+          // サムネイルが表示されていること
+          expect(getByRole(battleCard, 'img')).toBeInTheDocument();
+
+          // 大会名が表示されていること
           expect(
             getByText(battleCard, battle.tournament_name),
           ).toBeInTheDocument();
+
+          // 時間が表示されていること
           expect(
             getByText(battleCard, convertFriendlyTime(battle.length)),
           ).toBeInTheDocument();
+
+          // 登場MCが表示されていること
           expect(
             getByText(battleCard, convertFriendlyMatchLabel(battle)),
           ).toBeInTheDocument();
@@ -180,7 +205,7 @@ describe('IndexPage', () => {
         }
 
         // フィルタリングされたバトル以外が表示されていないこと
-        expect(screen.getAllByText('Watch Battle').length).toBe(
+        expect(screen.getAllByTestId(RegexCardDataTestIdPrefix).length).toBe(
           filteredBattles.length,
         );
       });
@@ -200,7 +225,7 @@ describe('IndexPage', () => {
 
         // 検証
         // フィルタリングされたバトル以外が表示されていないこと
-        expect(screen.getAllByText('Watch Battle').length).toBe(
+        expect(screen.getAllByTestId(RegexCardDataTestIdPrefix).length).toBe(
           filteredBattles.length,
         );
 
@@ -211,7 +236,7 @@ describe('IndexPage', () => {
 
         // 検証
         // 全てのバトル情報が表示されていること
-        expect(screen.getAllByText('Watch Battle').length).toBe(
+        expect(screen.getAllByTestId(RegexCardDataTestIdPrefix).length).toBe(
           dummyBattles.length,
         );
       });
@@ -240,7 +265,7 @@ describe('IndexPage', () => {
         }
 
         // フィルタリングされたバトル以外が表示されていないこと
-        expect(screen.getAllByText('Watch Battle').length).toBe(
+        expect(screen.getAllByTestId(RegexCardDataTestIdPrefix).length).toBe(
           filteredBattles.length,
         );
       });
@@ -265,7 +290,7 @@ describe('IndexPage', () => {
         }
 
         // フィルタリングされたバトル以外が表示されていないこと
-        expect(screen.getAllByText('Watch Battle').length).toBe(
+        expect(screen.getAllByTestId(RegexCardDataTestIdPrefix).length).toBe(
           filteredBattles.length,
         );
       });
@@ -294,7 +319,7 @@ describe('IndexPage', () => {
         }
 
         // フィルタリングされたバトル以外が表示されていないこと
-        expect(screen.getAllByText('Watch Battle').length).toBe(
+        expect(screen.getAllByTestId(RegexCardDataTestIdPrefix).length).toBe(
           filteredBattles.length,
         );
       });
@@ -329,7 +354,7 @@ describe('IndexPage', () => {
         }
 
         // フィルタリングされたバトル以外が表示されていないこと
-        expect(screen.getAllByText('Watch Battle').length).toBe(
+        expect(screen.getAllByTestId(RegexCardDataTestIdPrefix).length).toBe(
           filteredBattles.length,
         );
       });
@@ -359,7 +384,7 @@ describe('IndexPage', () => {
         }
 
         // フィルタリングされたバトル以外が表示されていないこと
-        expect(screen.getAllByText('Watch Battle').length).toBe(
+        expect(screen.getAllByTestId(RegexCardDataTestIdPrefix).length).toBe(
           filteredBattles.length,
         );
       });
@@ -393,7 +418,7 @@ describe('IndexPage', () => {
         }
 
         // フィルタリングされたバトル以外が表示されていないこと
-        expect(screen.getAllByText('Watch Battle').length).toBe(
+        expect(screen.getAllByTestId(RegexCardDataTestIdPrefix).length).toBe(
           filteredBattles.length,
         );
       });

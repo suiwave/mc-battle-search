@@ -1,10 +1,13 @@
-import { Trophy, User, Calendar, LinkIcon } from 'lucide-react';
+import Link from 'next/link';
+import Image from 'next/image';
+
+import { Trophy, User } from 'lucide-react';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+
 import type { Battle } from '@/types/tables';
 import { convertFriendlyMatchLabel, convertFriendlyTime } from '@/util/String';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import Image from 'next/image';
 import { generateThumbnailUrl } from '@/util/Url';
+import { cardDataTestIdPrefix } from '@/constants/constants';
 
 interface BattleCardProps {
   battle: Battle;
@@ -12,54 +15,41 @@ interface BattleCardProps {
 
 export function BattleCard({ battle }: BattleCardProps) {
   return (
-    <Card
-      className="bg-black bg-opacity-70 shadow-lg card-hover border-primary/20 overflow-hidden"
-      data-testid={battle.title}
+    <Link
+      href={battle.url}
+      passHref
+      data-testid={`${cardDataTestIdPrefix}${battle.title}`}
+      // biome-ignore lint/a11y/useSemanticElements: Link は a タグのラッパーとして使われているため問題なし
+      role="link"
     >
-      <div className="flex flex-col sm:flex-row">
-        <div className="w-full sm:w-1/3 h-48 sm:h-auto relative">
-          <a href={battle.url} target="_blank" rel="noopener noreferrer">
-            <Image
-              src={generateThumbnailUrl(battle.url)}
-              alt={`Thumbnail for ${battle.title}`}
-              width={640}
-              height={480}
-              objectFit="cover"
-            />
-          </a>
+      <Card className="bg-black bg-opacity-70 shadow-lg card-hover border-primary/20 overflow-hidden cursor-pointer transition-all duration-300 hover:scale-105">
+        <CardHeader>
+          <CardTitle className="text-2xl font-semibold text-accent">
+            {battle.title}
+          </CardTitle>
+        </CardHeader>
+        <div className="w-full aspect-video relative">
+          <Image
+            src={generateThumbnailUrl(battle.url)}
+            alt={`Thumbnail for ${battle.title}`}
+            width={640}
+            height={480}
+          />
+          <div className="absolute bottom-12 right-2 bg-black/75 px-2 py-1 rounded text-sm text-white font-medium">
+            {convertFriendlyTime(battle.length)}
+          </div>
         </div>
-        <div className="flex-1">
-          <CardHeader>
-            <CardTitle className="text-2xl font-semibold text-accent">
-              {battle.title}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2 text-gray-300">
-            <p className="flex items-center">
-              <Trophy className="mr-2 h-4 w-4 text-primary" />
-              {battle.tournament_name}
-            </p>
-            <p className="flex items-center">
-              <User className="mr-2 h-4 w-4 text-primary" />
-              {convertFriendlyMatchLabel(battle)}
-            </p>
-            <p className="flex items-center">
-              <Calendar className="mr-2 h-4 w-4 text-primary" />
-              {convertFriendlyTime(battle.length)}
-            </p>
-            <Button
-              variant="link"
-              className="p-0 h-auto text-accent hover:underline"
-              asChild
-            >
-              <a href={battle.url} target="_blank" rel="noopener noreferrer">
-                <LinkIcon className="mr-2 h-4 w-4" />
-                Watch Battle
-              </a>
-            </Button>
-          </CardContent>
-        </div>
-      </div>
-    </Card>
+        <CardContent className="space-y-2 text-gray-300 mt-4">
+          <p className="flex items-center">
+            <Trophy className="mr-2 h-4 w-4 text-primary" />
+            {battle.tournament_name}
+          </p>
+          <p className="flex items-center">
+            <User className="mr-2 h-4 w-4 text-primary" />
+            {convertFriendlyMatchLabel(battle)}
+          </p>
+        </CardContent>
+      </Card>
+    </Link>
   );
 }
