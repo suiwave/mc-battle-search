@@ -26,7 +26,13 @@ interface IndexPageProps {
  */
 export default function Index({ baseData }: IndexPageProps): JSX.Element {
   // フィルタリングされたバトルの状態を管理
-  const { battles, allTournamentValues, handleTournamentChange } = useBattleData(baseData);
+  const {
+    battles,
+    allMCsValues,
+    allTournamentValues,
+    handleMcChange,
+    handleTournamentChange,
+  } = useBattleData(baseData);
 
   return (
     <div className="container mx-auto px-4 py-16 gradient-bg min-h-screen">
@@ -34,27 +40,38 @@ export default function Index({ baseData }: IndexPageProps): JSX.Element {
         Lyrical Showdowns
       </h1>
       <div className="mb-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="flex items-center gap-2">
+          <SelectBox
+            onValueChange={handleMcChange}
+            placeholder={'MC'}
+            selectValues={allMCsValues}
+            testIdPrefix={'MC'}
+          />
+          <div className="text-center font-bold text-2xl w-12 mx-2 vs-fire">
+            VS
+          </div>
+          <Select>
+            <SelectTrigger className="mature-input">
+              <SelectValue placeholder="MC" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All MCs</SelectItem>
+              <SelectItem value="Cipher Slinger">Cipher Slinger</SelectItem>
+              <SelectItem value="Verbal Assassin">Verbal Assassin</SelectItem>
+              <SelectItem value="Rhyme Reaper">Rhyme Reaper</SelectItem>
+              <SelectItem value="Lyrical Genius">Lyrical Genius</SelectItem>
+              <SelectItem value="Flow Master">Flow Master</SelectItem>
+              <SelectItem value="Word Wizard">Word Wizard</SelectItem>
+              <SelectItem value="Rhythm Rebel">Rhythm Rebel</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
         <SelectBox
           onValueChange={handleTournamentChange}
           placeholder={'Tournament'}
           selectValues={allTournamentValues}
           testIdPrefix={'Tournament'}
         />
-        <Select>
-          <SelectTrigger className="mature-input">
-            <SelectValue placeholder="MC" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All MCs</SelectItem>
-            <SelectItem value="Cipher Slinger">Cipher Slinger</SelectItem>
-            <SelectItem value="Verbal Assassin">Verbal Assassin</SelectItem>
-            <SelectItem value="Rhyme Reaper">Rhyme Reaper</SelectItem>
-            <SelectItem value="Lyrical Genius">Lyrical Genius</SelectItem>
-            <SelectItem value="Flow Master">Flow Master</SelectItem>
-            <SelectItem value="Word Wizard">Word Wizard</SelectItem>
-            <SelectItem value="Rhythm Rebel">Rhythm Rebel</SelectItem>
-          </SelectContent>
-        </Select>
       </div>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {battles.map((battle) => (
