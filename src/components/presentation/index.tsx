@@ -23,8 +23,7 @@ export default function Index({ baseData }: IndexPageProps): JSX.Element {
     battles,
     allMCsValues,
     allTournamentValues,
-    handleMcChange,
-    handleTournamentChange,
+    handleSelectConditionChange,
   } = useBattleData(baseData);
 
   return (
@@ -35,7 +34,9 @@ export default function Index({ baseData }: IndexPageProps): JSX.Element {
       <div className="mb-8 grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="flex items-center gap-2">
           <SelectBox
-            onValueChange={handleMcChange}
+            onValueChange={(value) =>
+              handleSelectConditionChange({ MCName1: value })
+            }
             selectCategory={'MC'}
             placeholder={'MC'}
             selectValues={allMCsValues}
@@ -44,14 +45,18 @@ export default function Index({ baseData }: IndexPageProps): JSX.Element {
             VS
           </div>
           <SelectBox
-            onValueChange={handleMcChange}
+            onValueChange={(value) =>
+              handleSelectConditionChange({ MCName2: value })
+            }
             selectCategory={'MC'}
             placeholder={'MC'}
             selectValues={allMCsValues}
           />
         </div>
         <SelectBox
-          onValueChange={handleTournamentChange}
+          onValueChange={(value) =>
+            handleSelectConditionChange({ tournamentName: value })
+          }
           selectCategory={'Tournament'}
           placeholder={'Tournament'}
           selectValues={allTournamentValues}

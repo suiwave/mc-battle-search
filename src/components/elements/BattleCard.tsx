@@ -10,7 +10,7 @@ interface BattleCardProps {
 
 export function BattleCard({ battle }: BattleCardProps) {
   return (
-    <Card className="bg-black bg-opacity-70 shadow-lg card-hover border-primary/20">
+    <Card className="bg-black bg-opacity-70 shadow-lg card-hover border-primary/20" data-testid={battle.title}>
       <CardHeader>
         <CardTitle className="text-2xl font-semibold text-accent">
           {battle.title}

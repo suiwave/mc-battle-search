@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, getByText, render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom/vitest';
@@ -9,7 +9,10 @@ import IndexPage from '@/app/page';
 import { convertFriendlyMatchLabel, convertFriendlyTime } from '@/util/String';
 
 import { dummyBattles } from '../TestData/TestData';
-import { type SelectCategory, selectDataTestIdPrefix } from '@/constants/constants';
+import {
+  type SelectCategory,
+  selectDataTestIdPrefix,
+} from '@/constants/constants';
 
 const user = userEvent.setup();
 
@@ -70,7 +73,9 @@ const selectOption = async (
   const combobox = getComboboxByText(comboboxText, comboboxIndex);
   await user.click(combobox);
 
-  const option = screen.getByTestId(`${selectDataTestIdPrefix[selectCategory]}${optionTestId}`);
+  const option = screen.getByTestId(
+    `${selectDataTestIdPrefix[selectCategory]}${optionTestId}`,
+  );
   await user.click(option);
 };
 
@@ -79,7 +84,7 @@ const selectTournament = async (
   optionTestId: string,
   comboboxIndex = 0,
 ) => {
-  await selectOption("Tournament", comboboxText, optionTestId, comboboxIndex);
+  await selectOption('Tournament', comboboxText, optionTestId, comboboxIndex);
 };
 
 const selectMC = async (
@@ -87,7 +92,7 @@ const selectMC = async (
   optionTestId: string,
   comboboxIndex = 0,
 ) => {
-  await selectOption("MC", comboboxText, optionTestId, comboboxIndex);
+  await selectOption('MC', comboboxText, optionTestId, comboboxIndex);
 };
 
 describe('IndexPage', () => {
@@ -137,13 +142,16 @@ describe('IndexPage', () => {
         // 検証
         // バトル情報が全て表示されていること
         for (const battle of dummyBattles) {
-          expect(screen.getByText(battle.title)).toBeInTheDocument();
-          expect(screen.getByText(battle.tournament_name)).toBeInTheDocument();
+          const battleCard = screen.getByTestId(battle.title);
+          expect(getByText(battleCard, battle.title)).toBeInTheDocument();
           expect(
-            screen.getByText(convertFriendlyTime(battle.length)),
+            getByText(battleCard, battle.tournament_name),
           ).toBeInTheDocument();
           expect(
-            screen.getByText(convertFriendlyMatchLabel(battle)),
+            getByText(battleCard, convertFriendlyTime(battle.length)),
+          ).toBeInTheDocument();
+          expect(
+            getByText(battleCard, convertFriendlyMatchLabel(battle)),
           ).toBeInTheDocument();
         }
       });
@@ -153,6 +161,11 @@ describe('IndexPage', () => {
     describe('大会によるフィルター機能', () => {
       it('大会でフィルターできること', async () => {
         // 準備
+        const filteredBattles = dummyBattles.filter(
+          (battle) =>
+            battle.tournament_name === dummyBattles[0].tournament_name,
+        );
+
         // 実行
         await renderServerComponent(IndexPage);
 
@@ -161,11 +174,6 @@ describe('IndexPage', () => {
         await selectTournament('Tournament', dummyBattles[0].tournament_name);
 
         // 検証
-        const filteredBattles = dummyBattles.filter(
-          (battle) =>
-            battle.tournament_name === dummyBattles[0].tournament_name,
-        );
-
         // フィルタリングされたバトルが表示されていること
         for (const battle of filteredBattles) {
           expect(screen.getByText(battle.title)).toBeInTheDocument();
@@ -178,6 +186,11 @@ describe('IndexPage', () => {
       });
       it('大会で全てを選択した場合、大会によるフィルターは解除されること', async () => {
         // 準備
+        const filteredBattles = dummyBattles.filter(
+          (battle) =>
+            battle.tournament_name === dummyBattles[0].tournament_name,
+        );
+
         // 実行
         await renderServerComponent(IndexPage);
 
@@ -186,11 +199,6 @@ describe('IndexPage', () => {
         await selectTournament('Tournament', dummyBattles[0].tournament_name);
 
         // 検証
-        const filteredBattles = dummyBattles.filter(
-          (battle) =>
-            battle.tournament_name === dummyBattles[0].tournament_name,
-        );
-
         // フィルタリングされたバトル以外が表示されていないこと
         expect(screen.getAllByText('Watch Battle').length).toBe(
           filteredBattles.length,
@@ -212,18 +220,20 @@ describe('IndexPage', () => {
     describe('MCによるフィルター機能', () => {
       it('MCフィルター1が指定、2が全てで機能していること', async () => {
         // 準備
+        const testMc1 = dummyBattles[0].mc1;
+
+        const filteredBattles = dummyBattles.filter(
+          (battle) => battle.mc1 === testMc1 || battle.mc2 === testMc1,
+        );
+
         // 実行
         await renderServerComponent(IndexPage);
 
         // フィルターを選択
         // MCフィルター1を操作
-        await selectMC('MC', dummyBattles[0].mc1, 0);
+        await selectMC('MC', testMc1, 0);
 
         // 検証
-        const filteredBattles = dummyBattles.filter(
-          (battle) => battle.mc1 === dummyBattles[0].mc1,
-        );
-
         // フィルタリングされたバトルが表示されていること
         for (const battle of filteredBattles) {
           expect(screen.getByText(battle.title)).toBeInTheDocument();
@@ -236,18 +246,19 @@ describe('IndexPage', () => {
       });
       it('MCフィルター1が全て、2が指定で機能していること', async () => {
         // 準備
+        const testMc1 = dummyBattles[0].mc1;
+        const filteredBattles = dummyBattles.filter(
+          (battle) => battle.mc1 === testMc1 || battle.mc2 === testMc1,
+        );
+
         // 実行
         await renderServerComponent(IndexPage);
 
         // フィルターを選択
         // MCフィルター2を操作
-        await selectMC('MC', dummyBattles[0].mc1, 1);
+        await selectMC('MC', testMc1);
 
         // 検証
-        const filteredBattles = dummyBattles.filter(
-          (battle) => battle.mc1 === dummyBattles[0].mc1,
-        );
-
         // フィルタリングされたバトルが表示されていること
         for (const battle of filteredBattles) {
           expect(screen.getByText(battle.title)).toBeInTheDocument();
@@ -258,22 +269,132 @@ describe('IndexPage', () => {
           filteredBattles.length,
         );
       });
-      it.todo('MCフィルター1が指定、2が指定で機能していること', async () => { });
-    });
+      it('MCフィルター1が指定、2が指定で機能していること', async () => {
+        // 準備
+        const testMc1 = dummyBattles[0].mc1;
+        // biome-ignore lint/style/noNonNullAssertion: テストデータなのでnullチェックは不要
+        const testMc2 = dummyBattles[0].mc2!;
 
-    describe('大会とMCによる同時フィルター機能', () => {
-      describe('大会フィルターを指定した状態で動作すること', () => {
-        it.todo(
-          'MCフィルター1が指定、2が全てで機能していること',
-          async () => { },
+        const filteredBattles = dummyBattles
+          .filter((battle) => battle.mc1 === testMc1 || battle.mc2 === testMc1)
+          .filter((battle) => battle.mc1 === testMc2 || battle.mc2 === testMc2);
+
+        // 実行
+        await renderServerComponent(IndexPage);
+
+        // フィルターを選択
+        // MCフィルター1と2を同時に操作
+        await selectMC('MC', testMc1);
+        await selectMC('MC', testMc2);
+
+        // 検証
+        // フィルタリングされたバトルが表示されていること
+        for (const battle of filteredBattles) {
+          expect(screen.getByText(battle.title)).toBeInTheDocument();
+        }
+
+        // フィルタリングされたバトル以外が表示されていないこと
+        expect(screen.getAllByText('Watch Battle').length).toBe(
+          filteredBattles.length,
         );
-        it.todo(
-          'MCフィルター1が全て、2が指定で機能していること',
-          async () => { },
+      });
+    });
+  });
+
+  describe('大会とMCによる同時フィルター機能', () => {
+    describe('大会フィルターを指定した状態で動作すること', () => {
+      it('MCフィルター1が指定、2が全てで機能していること', async () => {
+        // 準備
+        const testTournamentName = dummyBattles[0].tournament_name;
+        const testMc1 = dummyBattles[0].mc1;
+
+        const filteredBattles = dummyBattles
+          .filter((battle) => battle.tournament_name === testTournamentName)
+          .filter((battle) => battle.mc1 === testMc1 || battle.mc2 === testMc1);
+
+        // 実行
+        await renderServerComponent(IndexPage);
+
+        // フィルターを選択
+        // 大会フィルターを操作
+        await selectTournament('Tournament', testTournamentName);
+
+        // MCフィルター1を操作
+        await selectMC('MC', testMc1);
+
+        // 検証
+        // フィルタリングされたバトルが表示されていること
+        for (const battle of filteredBattles) {
+          expect(screen.getByText(battle.title)).toBeInTheDocument();
+        }
+
+        // フィルタリングされたバトル以外が表示されていないこと
+        expect(screen.getAllByText('Watch Battle').length).toBe(
+          filteredBattles.length,
         );
-        it.todo(
-          'MCフィルター1が指定、2が指定で機能していること',
-          async () => { },
+      });
+      it('MCフィルター1が全て、2が指定で機能していること', async () => {
+        // 準備
+        const testTournamentName = dummyBattles[0].tournament_name;
+        const testMc2 = dummyBattles[0].mc1;
+
+        const filteredBattles = dummyBattles
+          .filter((battle) => battle.tournament_name === testTournamentName)
+          .filter((battle) => battle.mc1 === testMc2 || battle.mc2 === testMc2);
+
+        // 実行
+        await renderServerComponent(IndexPage);
+
+        // フィルターを選択
+        // 大会フィルターを操作
+        await selectTournament('Tournament', testTournamentName);
+
+        // MCフィルター2を操作
+        await selectMC('MC', testMc2, 1);
+
+        // 検証
+        // フィルタリングされたバトルが表示されていること
+        for (const battle of filteredBattles) {
+          expect(screen.getByText(battle.title)).toBeInTheDocument();
+        }
+
+        // フィルタリングされたバトル以外が表示されていないこと
+        expect(screen.getAllByText('Watch Battle').length).toBe(
+          filteredBattles.length,
+        );
+      });
+      it('MCフィルター1が指定、2が指定で機能していること', async () => {
+        // 準備
+        const testTournamentName = dummyBattles[0].tournament_name;
+        const testMc1 = dummyBattles[0].mc1;
+        // biome-ignore lint/style/noNonNullAssertion: テストデータなのでnullチェックは不要
+        const testMc2 = dummyBattles[0].mc2!;
+
+        const filteredBattles = dummyBattles
+          .filter((battle) => battle.tournament_name === testTournamentName)
+          .filter((battle) => battle.mc1 === testMc1 || battle.mc2 === testMc1)
+          .filter((battle) => battle.mc1 === testMc2 || battle.mc2 === testMc2);
+
+        // 実行
+        await renderServerComponent(IndexPage);
+
+        // フィルターを選択
+        // 大会フィルターを操作
+        await selectTournament('Tournament', testTournamentName);
+
+        // MCフィルター1と2を同時に操作
+        await selectMC('MC', testMc1);
+        await selectMC('MC', testMc2);
+
+        // 検証
+        // フィルタリングされたバトルが表示されていること
+        for (const battle of filteredBattles) {
+          expect(screen.getByText(battle.title)).toBeInTheDocument();
+        }
+
+        // フィルタリングされたバトル以外が表示されていないこと
+        expect(screen.getAllByText('Watch Battle').length).toBe(
+          filteredBattles.length,
         );
       });
     });

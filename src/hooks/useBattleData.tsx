@@ -3,10 +3,16 @@ import { useState } from 'react';
 import type { Battle } from '@/types/tables';
 
 export interface filterCondition {
-  MCName1: string;
-  MCName2: string;
-  tournamentName: string;
+  MCName1?: string;
+  MCName2?: string;
+  tournamentName?: string;
 }
+
+const defaultFilterCondition: filterCondition = {
+  MCName1: 'all',
+  MCName2: 'all',
+  tournamentName: 'all',
+};
 
 /**
  * Battleデータを管理するカスタムフック
@@ -14,6 +20,9 @@ export interface filterCondition {
  */
 const useBattleData = (baseData: Battle[]) => {
   const [battles, setBattles] = useState<Battle[]>(baseData);
+  const [filterCondition, setFilterCondition] = useState<filterCondition>(
+    defaultFilterCondition,
+  );
 
   // MC名の配列を作成
   const allMCsValues = [{ name: 'All MCs', value: 'all' }];
@@ -40,36 +49,37 @@ const useBattleData = (baseData: Battle[]) => {
     allTournamentValues.push({ name: TournamentName, value: TournamentName });
   }
 
-  // MC名でバトルをフィルタリング
-  const handleMcChange = (mcName: string) => {
-    if (mcName === 'all') {
-      setBattles(baseData);
-    } else {
-      setBattles(
-        baseData.filter(
-          (battle) => battle.mc1 === mcName || battle.mc2 === mcName,
-        ),
-      );
-    }
-  };
+  // MC名/大会名でバトルをフィルタリング
+  const handleSelectConditionChange = (selectedCondition: filterCondition) => {
+    const condition = { ...filterCondition, ...selectedCondition };
+    setFilterCondition(condition);
 
-  // 大会名でバトルをフィルタリング
-  const handleTournamentChange = (tournamentName: string) => {
-    if (tournamentName === 'all') {
-      setBattles(baseData);
-    } else {
-      setBattles(
-        baseData.filter((battle) => battle.tournament_name === tournamentName),
+    let filteredBattles = baseData;
+    if (condition.MCName1 !== 'all') {
+      filteredBattles = filteredBattles.filter(
+        (battle) =>
+          battle.mc1 === condition.MCName1 || battle.mc2 === condition.MCName1,
       );
     }
+    if (condition.MCName2 !== 'all') {
+      filteredBattles = filteredBattles.filter(
+        (battle) =>
+          battle.mc1 === condition.MCName2 || battle.mc2 === condition.MCName2,
+      );
+    }
+    if (condition.tournamentName !== 'all') {
+      filteredBattles = filteredBattles.filter(
+        (battle) => battle.tournament_name === condition.tournamentName,
+      );
+    }
+    setBattles(filteredBattles);
   };
 
   return {
     battles,
     allMCsValues,
     allTournamentValues,
-    handleMcChange,
-    handleTournamentChange,
+    handleSelectConditionChange,
   };
 };
 
