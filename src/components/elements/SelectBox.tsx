@@ -10,11 +10,13 @@ import {
 
 import type { JSX } from 'react';
 
+import { selectDataTestIdPrefix, type SelectCategory } from '@/constants/constants';
+
 interface SelectBoxProps {
   onValueChange: (selectValue: string) => void;
+  selectCategory: SelectCategory;
   placeholder: string;
   selectValues: { name: string; value: string }[]; // selectValues の型を変更
-  testIdPrefix: string;
 }
 
 /**
@@ -30,9 +32,9 @@ interface SelectBoxProps {
  */
 export default function SelectBox({
   onValueChange,
+  selectCategory,
   placeholder,
   selectValues,
-  testIdPrefix,
 }: SelectBoxProps): JSX.Element {
   return (
     <Select onValueChange={onValueChange}>
@@ -45,7 +47,7 @@ export default function SelectBox({
           <SelectItem
             key={value}
             value={value}
-            data-testid={`${testIdPrefix}-select-option-${value}`}
+            data-testid={`${selectDataTestIdPrefix[selectCategory]}${value}`}
           >
             {name}
           </SelectItem>

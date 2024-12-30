@@ -36,25 +36,25 @@ export default function Index({ baseData }: IndexPageProps): JSX.Element {
         <div className="flex items-center gap-2">
           <SelectBox
             onValueChange={handleMcChange}
+            selectCategory={'MC'}
             placeholder={'MC'}
             selectValues={allMCsValues}
-            testIdPrefix={'MC'}
           />
           <div className="text-center font-bold text-2xl w-12 mx-2 vs-fire">
             VS
           </div>
           <SelectBox
             onValueChange={handleMcChange}
+            selectCategory={'MC'}
             placeholder={'MC'}
             selectValues={allMCsValues}
-            testIdPrefix={'MC'}
           />
         </div>
         <SelectBox
           onValueChange={handleTournamentChange}
+          selectCategory={'Tournament'}
           placeholder={'Tournament'}
           selectValues={allTournamentValues}
-          testIdPrefix={'Tournament'}
         />
       </div>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

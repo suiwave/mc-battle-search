@@ -9,6 +9,7 @@ import IndexPage from '@/app/page';
 import { convertFriendlyMatchLabel, convertFriendlyTime } from '@/util/String';
 
 import { dummyBattles } from '../TestData/TestData';
+import { type SelectCategory, selectDataTestIdPrefix } from '@/constants/constants';
 
 const user = userEvent.setup();
 
@@ -50,6 +51,43 @@ const getComboboxByText = (text: string, index = 0) => {
   return screen
     .getAllByRole('combobox')
     .filter((element) => element.textContent === text)[index];
+};
+
+/**
+ * 指定したテキストのオプションをクリックする関数
+ *
+ * @param selectCategory - コンボボックスの種類
+ * @param comboboxText - コンボボックスのテキスト
+ * @param optionText - オプションのテキスト
+ * @param comboboxIndex - コンボボックスのインデックス (デフォルトは0)
+ */
+const selectOption = async (
+  selectCategory: SelectCategory,
+  comboboxText: string,
+  optionTestId: string,
+  comboboxIndex = 0,
+) => {
+  const combobox = getComboboxByText(comboboxText, comboboxIndex);
+  await user.click(combobox);
+
+  const option = screen.getByTestId(`${selectDataTestIdPrefix[selectCategory]}${optionTestId}`);
+  await user.click(option);
+};
+
+const selectTournament = async (
+  comboboxText: string,
+  optionTestId: string,
+  comboboxIndex = 0,
+) => {
+  await selectOption("Tournament", comboboxText, optionTestId, comboboxIndex);
+};
+
+const selectMC = async (
+  comboboxText: string,
+  optionTestId: string,
+  comboboxIndex = 0,
+) => {
+  await selectOption("MC", comboboxText, optionTestId, comboboxIndex);
 };
 
 describe('IndexPage', () => {
@@ -119,15 +157,8 @@ describe('IndexPage', () => {
         await renderServerComponent(IndexPage);
 
         // フィルターを選択
-        // 大会フィルターをクリック
-        const tournamentFilter = getComboboxByText('Tournament');
-        await user.click(tournamentFilter);
-
-        // 指定した大会名を選択
-        const tournamentOption = screen.getByTestId(
-          `Tournament-select-option-${dummyBattles[0].tournament_name}`,
-        );
-        await user.click(tournamentOption);
+        // 大会フィルターを操作
+        await selectTournament('Tournament', dummyBattles[0].tournament_name);
 
         // 検証
         const filteredBattles = dummyBattles.filter(
@@ -151,15 +182,8 @@ describe('IndexPage', () => {
         await renderServerComponent(IndexPage);
 
         // フィルターを選択
-        // 大会フィルターをクリック
-        const tournamentFilter = getComboboxByText('Tournament');
-        await user.click(tournamentFilter);
-
-        // 指定した大会名を選択
-        const tournamentOption = screen.getByTestId(
-          `Tournament-select-option-${dummyBattles[0].tournament_name}`,
-        );
-        await user.click(tournamentOption);
+        // 大会フィルターを操作
+        await selectTournament('Tournament', dummyBattles[0].tournament_name);
 
         // 検証
         const filteredBattles = dummyBattles.filter(
@@ -173,12 +197,9 @@ describe('IndexPage', () => {
         );
 
         // ここからALLを選択するパート
-        // フィルターを選択
-        await user.click(tournamentFilter);
-
-        // "All" オプションを選択
-        const allOption = screen.getByTestId('Tournament-select-option-all');
-        await user.click(allOption);
+        // 大会フィルターを操作
+        // 上で選択したやつからallへ変更する
+        await selectTournament(dummyBattles[0].tournament_name, 'all');
 
         // 検証
         // 全てのバトル情報が表示されていること
@@ -195,15 +216,8 @@ describe('IndexPage', () => {
         await renderServerComponent(IndexPage);
 
         // フィルターを選択
-        // MCフィルター1をクリック
-        const mcFilter1 = getComboboxByText('MC', 0);
-        await user.click(mcFilter1);
-
-        // 指定したMC名を選択
-        const mcOption1 = screen.getByTestId(
-          `MC-select-option-${dummyBattles[0].mc1}`,
-        );
-        await user.click(mcOption1);
+        // MCフィルター1を操作
+        await selectMC('MC', dummyBattles[0].mc1, 0);
 
         // 検証
         const filteredBattles = dummyBattles.filter(
@@ -226,15 +240,8 @@ describe('IndexPage', () => {
         await renderServerComponent(IndexPage);
 
         // フィルターを選択
-        // MCフィルター2をクリック
-        const mcFilter2 = getComboboxByText('MC', 1);
-        await user.click(mcFilter2);
-
-        // 指定したMC名を選択
-        const mcOption2 = screen.getByTestId(
-          `MC-select-option-${dummyBattles[0].mc1}`,
-        );
-        await user.click(mcOption2);
+        // MCフィルター2を操作
+        await selectMC('MC', dummyBattles[0].mc1, 1);
 
         // 検証
         const filteredBattles = dummyBattles.filter(
