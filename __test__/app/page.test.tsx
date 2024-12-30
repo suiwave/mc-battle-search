@@ -220,23 +220,53 @@ describe('IndexPage', () => {
           filteredBattles.length,
         );
       });
-      it.todo('MCフィルター1が全て、2が指定で機能していること', async () => {});
-      it.todo('MCフィルター1が指定、2が指定で機能していること', async () => {});
+      it('MCフィルター1が全て、2が指定で機能していること', async () => {
+        // 準備
+        // 実行
+        await renderServerComponent(IndexPage);
+
+        // フィルターを選択
+        // MCフィルター2をクリック
+        const mcFilter2 = getComboboxByText('MC', 1);
+        await user.click(mcFilter2);
+
+        // 指定したMC名を選択
+        const mcOption2 = screen.getByTestId(
+          `MC-select-option-${dummyBattles[0].mc1}`,
+        );
+        await user.click(mcOption2);
+
+        // 検証
+        const filteredBattles = dummyBattles.filter(
+          (battle) => battle.mc1 === dummyBattles[0].mc1,
+        );
+
+        // フィルタリングされたバトルが表示されていること
+        for (const battle of filteredBattles) {
+          expect(screen.getByText(battle.title)).toBeInTheDocument();
+        }
+
+        // フィルタリングされたバトル以外が表示されていないこと
+        expect(screen.getAllByText('Watch Battle').length).toBe(
+          filteredBattles.length,
+        );
+      });
+      it.todo('MCフィルター1が指定、2が指定で機能していること', async () => { });
     });
 
     describe('大会とMCによる同時フィルター機能', () => {
       describe('大会フィルターを指定した状態で動作すること', () => {
         it.todo(
           'MCフィルター1が指定、2が全てで機能していること',
-          async () => {},
+          async () => { },
         );
         it.todo(
           'MCフィルター1が全て、2が指定で機能していること',
-          async () => {},
+          async () => { },
         );
         it.todo(
           'MCフィルター1が指定、2が指定で機能していること',
-          async () => {},
+          async () => { },
         );
       });
     });

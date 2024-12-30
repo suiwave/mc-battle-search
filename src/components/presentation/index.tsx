@@ -1,12 +1,5 @@
 'use client';
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Flame, Zap, Mic } from 'lucide-react';
 import type { Battle } from '@/types/tables';
 
@@ -50,21 +43,12 @@ export default function Index({ baseData }: IndexPageProps): JSX.Element {
           <div className="text-center font-bold text-2xl w-12 mx-2 vs-fire">
             VS
           </div>
-          <Select>
-            <SelectTrigger className="mature-input">
-              <SelectValue placeholder="MC" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All MCs</SelectItem>
-              <SelectItem value="Cipher Slinger">Cipher Slinger</SelectItem>
-              <SelectItem value="Verbal Assassin">Verbal Assassin</SelectItem>
-              <SelectItem value="Rhyme Reaper">Rhyme Reaper</SelectItem>
-              <SelectItem value="Lyrical Genius">Lyrical Genius</SelectItem>
-              <SelectItem value="Flow Master">Flow Master</SelectItem>
-              <SelectItem value="Word Wizard">Word Wizard</SelectItem>
-              <SelectItem value="Rhythm Rebel">Rhythm Rebel</SelectItem>
-            </SelectContent>
-          </Select>
+          <SelectBox
+            onValueChange={handleMcChange}
+            placeholder={'MC'}
+            selectValues={allMCsValues}
+            testIdPrefix={'MC'}
+          />
         </div>
         <SelectBox
           onValueChange={handleTournamentChange}
