@@ -112,7 +112,7 @@ describe('IndexPage', () => {
 
       // 検証
       const heading = screen.getByRole('heading', {
-        name: /Lyrical Showdowns/i,
+        name: /MC Battle Search/i,
       });
       expect(heading).toBeInTheDocument();
     });

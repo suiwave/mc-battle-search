@@ -29,7 +29,7 @@ export default function Index({ baseData }: IndexPageProps): JSX.Element {
   return (
     <div className="container mx-auto px-4 py-16 gradient-bg min-h-screen">
       <h1 className="text-5xl font-bold mb-8 text-center neon-text">
-        Lyrical Showdowns
+        MC Battle Search
       </h1>
       <div className="mb-8 grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="flex items-center gap-2">
